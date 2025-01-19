@@ -3,8 +3,8 @@ import moment from "moment-timezone";
 import { logger } from "@utils/logger";
 import { AvailableSlotsRequest, AvailableSlotsResponse } from "@models/availableSlotsDataModel";
 
-const SLOT_DURATION = Number(process.env.SLOT_DURATION) || 30; // Fixed slot duration (in minutes)
-const DOCTOR_TIMEZONE = process.env.DOCTOR_TIMEZONE || "America/Los_Angeles";
+const SLOT_DURATION = Number(process.env.DR_DURATION) || 30; // Fixed slot duration (in minutes)
+const DOCTOR_TIMEZONE = process.env.DR_TIMEZONE || "America/Los_Angeles";
 const START_HOUR = Number(process.env.DR_START_HOUR) || 10;
 const END_HOUR = Number(process.env.DR_END_HOUR) || 17;
 
@@ -62,6 +62,10 @@ export const availableSlotsController = async (request: AvailableSlotsRequest): 
     // Set doctor's available working hours in local timezone
     const doctorStartLocal = doctorDateLocal.clone().set({ hour: START_HOUR, minute: 0, second: 0, millisecond: 0 });
     const doctorEndLocal = doctorDateLocal.clone().set({ hour: END_HOUR, minute: 0, second: 0, millisecond: 0 });
+    logger.info("Doctor's Availability in Local Timezone", {
+      start: doctorStartLocal.format(),
+      end: doctorEndLocal.format(),
+    });
 
     // Convert doctor's working hours to UTC for database querying
     const doctorStartUTC = doctorStartLocal.utc();
