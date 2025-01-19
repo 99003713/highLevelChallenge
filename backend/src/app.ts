@@ -21,7 +21,7 @@ const router = express.Router();
 const BASE_PATH = process.env.BASE_PATH || "/appointment";
 app.use(BASE_PATH, router);
 
-router.get("/free-slots", availableSlotsHandler);
+router.get("/available_slots", availableSlotsHandler);
 // router.post("/create-event", createEvent);
 // router.get("/events", getEvents);
 

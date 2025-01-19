@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import { availableSlotsController } from "@/src/controllers/availableSlotsController";
-import { STATUS_CODES } from "@/src/utils/response";
-import { logger } from "@/src/utils/logger";
+import { availableSlotsController } from "@src/controllers/availableSlotsController";
+import { STATUS_CODES } from "@src/utils/response";
+import { logger } from "@src/utils/logger";
 import Joi from "joi";
 
 export const availableSlotsHandler: RequestHandler = async (
@@ -15,14 +15,15 @@ export const availableSlotsHandler: RequestHandler = async (
     // Define Joi Schema for Validation
     const availableSlotsSchema = Joi.object({
       date: Joi.string()
-        .isoDate()
+        .pattern(new RegExp(/^\d{4}-\d{2}-\d{2}$/))
         .required(),
       timezone: Joi.string()
         .valid(
           "America/Los_Angeles",
           "America/New_York",
           "Asia/Kolkata",
-          "Europe/London"
+          "Europe/London",
+          "US/Eastern"
         ) // Add more valid timezones as needed
         .required()
     });
@@ -33,9 +34,9 @@ export const availableSlotsHandler: RequestHandler = async (
     });
 
     if (error) {
-      logger.warn("Validation Error in availableSlotsHandler", error.details);
+      logger.error("Validation Error in availableSlotsHandler", error.details);
       return response
-        .status(500)
+        .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json({ errors: error.details.map((err) => err.message) });
     }
 
