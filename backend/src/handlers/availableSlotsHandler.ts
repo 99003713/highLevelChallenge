@@ -3,6 +3,7 @@ import { availableSlotsController } from "@src/controllers/availableSlotsControl
 import { STATUS_CODES } from "@src/utils/response";
 import { logger } from "@src/utils/logger";
 import Joi from "joi";
+import { AvailableSlotsResponse } from "@models/availableSlotsDataModel";
 
 export const availableSlotsHandler: RequestHandler = async (
   request: Request,
@@ -10,7 +11,7 @@ export const availableSlotsHandler: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    logger.info("availableSlotsHandler Request", request.query);
+    logger.info("availableSlotsHandler Request", { query: request.query });
 
     // Define Joi Schema for Validation
     const availableSlotsSchema = Joi.object({
@@ -41,7 +42,7 @@ export const availableSlotsHandler: RequestHandler = async (
     }
 
     // Call controller with validated data
-    const availableSlots = await availableSlotsController(value);
+    const availableSlots: AvailableSlotsResponse = await availableSlotsController(value);
     logger.info("availableSlotsHandler Response", availableSlots);
 
     response.status(STATUS_CODES.OK).json(availableSlots);

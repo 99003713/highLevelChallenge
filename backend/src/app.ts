@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 
 import * as error from "@middlewares/error";
 import { availableSlotsHandler } from "@handlers/availableSlotsHandler";
-// import { createEvent } from "@controllers/createEventController";
+import { createEventHandler } from "@handlers/createEventHandler";
 // import { getEvents } from "@controllers/getEventsController";
 
 dotenv.config();
@@ -22,7 +22,7 @@ const BASE_PATH = process.env.BASE_PATH || "/appointment";
 app.use(BASE_PATH, router);
 
 router.get("/available_slots", availableSlotsHandler);
-// router.post("/create-event", createEvent);
+router.post("/create_event", createEventHandler);
 // router.get("/events", getEvents);
 
 // Catch All Error Handler

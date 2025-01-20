@@ -2,6 +2,7 @@ import { db } from "@config/firebase";
 import moment from "moment-timezone";
 import { logger } from "@utils/logger";
 import { AvailableSlotsRequest, AvailableSlotsResponse } from "@models/availableSlotsDataModel";
+import { invalidRequest } from "@utils/errorCodes";
 
 const SLOT_DURATION = Number(process.env.DR_DURATION) || 30; // Fixed slot duration (in minutes)
 const DOCTOR_TIMEZONE = process.env.DR_TIMEZONE || "America/Los_Angeles";
@@ -57,6 +58,12 @@ export const availableSlotsController = async (request: AvailableSlotsRequest): 
 
     // Convert patient's date to the doctor's timezone
     const patientDateLocal = moment.tz(date, timezone).startOf("day");
+    const currentDateLocal = moment.tz(timezone).startOf("day");
+
+    // Check if the event date is in the past
+    if (patientDateLocal.isBefore(currentDateLocal)) {
+      throw new Error(JSON.stringify(invalidRequest))
+    }
     const doctorDateLocal = patientDateLocal.clone().tz(DOCTOR_TIMEZONE);
 
     // Set doctor's available working hours in local timezone
@@ -87,8 +94,8 @@ export const availableSlotsController = async (request: AvailableSlotsRequest): 
     const bookedSlots = bookedSlotsSnap.docs.map(doc => {
       const eventData = doc.data();
       return {
-        start: moment.utc(eventData.date.toDate()),
-        end: moment.utc(eventData.date.toDate()).add(eventData.duration, "minutes"),
+        start: moment.utc(eventData.event_start_time.toDate()),
+        end: moment.utc(eventData.event_end_time.toDate()),
       };
     });
 
