@@ -10,38 +10,46 @@ export const createEventController = async (request: CreateEventRequest): Promis
 
         const { dateTime, duration } = request;
 
-        // Convert input date to UTC
-        const event_start_time = moment.tz(dateTime, "YYYY-MM-DDTHH:mm:ss", "UTC").utc();
-        const event_end_time = event_start_time.clone().add(duration, "minutes");
+        // Explicitly parse the input as UTC
+        const eventStartUTC = moment.utc(dateTime);  // Ensures input is always treated as UTC
+        const eventEndUTC = eventStartUTC.clone().add(duration, "minutes");
 
-        // Check if the event date is in the past
-        if (event_start_time.isBefore(moment.utc())) {
+        // Check if the event is in the past (UTC-based check)
+        if (eventStartUTC.isBefore(moment.utc())) {
             throw new Error(JSON.stringify(invalidRequest));
         }
 
-        logger.info("Checking for overlapping events", { event_start_time: event_start_time.format(), event_end_time: event_end_time.format() });
+        logger.info("Creating Event in UTC", { 
+            eventStartUTC: eventStartUTC.format(), 
+            eventEndUTC: eventEndUTC.format(), 
+            duration 
+        });
 
-        // Query Firestore for events that might overlap
-        //created a Composite INDEX in firestore for event_start_time and event_end_time
+        // Query Firestore for overlapping events
         const eventQuerySnapshot = await db.collection("events")
-            .where("event_start_time", "<", event_end_time.toDate())  // Any event that starts before new event ends
-            .where("event_end_time", ">", event_start_time.toDate())  // Any event that ends after new event starts
+            .where("event_start_time", "<", eventEndUTC.toDate())  // Event ends after new event starts
+            .where("event_end_time", ">", eventStartUTC.toDate())  // Event starts before new event ends
             .get();
 
         if (!eventQuerySnapshot.empty) {
             throw new Error(JSON.stringify(eventAlreadyExists));
         }
 
-        // Store the event in UTC format
+        // Store event in Firestore with UTC timestamps
         await db.collection("events").add({
-            event_start_time: event_start_time.toDate(),
-            event_end_time: event_end_time.toDate(),
+            event_start_time: eventStartUTC.toDate(),  // Store in UTC
+            event_end_time: eventEndUTC.toDate(),      // Store in UTC
             duration,
-            createdAt: moment.utc().toDate(),
+            createdAt: moment.utc().toDate(),         // Ensure createdAt is also in UTC
         });
 
-        logger.info("Event created successfully", { event_start_time: event_start_time.format(), event_end_time: event_end_time.format(), duration });
+        logger.info("Event created successfully", { 
+            eventStartUTC: eventStartUTC.format(), 
+            eventEndUTC: eventEndUTC.format() 
+        });
+
         return { message: "Event created successfully" };
+
     } catch (error) {
         logger.error("Error in createEventController", error);
         throw error;
