@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, TextField, Typography, Alert } from "@mui/material";
+import { Container, Button, TextField, Typography, Alert, Box } from "@mui/material";
 import CustomDatePicker from "../components/DatePicker";
 import TimezoneSelect from "../components/TimezoneSelect";
 import FreeSlots from "../components/FreeSlots";
@@ -22,7 +22,16 @@ const BookEvent = () => {
     setSelectedSlot("");
   }, [timezone]);
 
+  const validateDate = () => {
+    if (date.isBefore(dayjs(), "day")) {
+      setMessage({ type: "error", text: "The selected date cannot be in the past." });
+      return false;
+    }
+    return true;
+  };
+
   const fetchSlots = async () => {
+    if (!validateDate()) return;
     if (!date || !timezone) {
       setMessage({ type: "error", text: "Please select a valid date and timezone." });
       return;
@@ -74,7 +83,11 @@ const BookEvent = () => {
         Book an Appointment
       </Typography>
 
-      {message.text && <Alert severity={message.type}>{message.text}</Alert>}
+      {message.text && (
+        <Box mb={2}>
+          <Alert severity={message.type}>{message.text}</Alert>
+        </Box>
+      )}
 
       <CustomDatePicker label="Select Date" value={date} onChange={setDate} />
       <TextField
