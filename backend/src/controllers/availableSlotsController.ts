@@ -32,14 +32,17 @@ const generateAvailableSlots = (
   while (currentTime.isBefore(doctorEndUTC)) {
     const slotEnd = currentTime.clone().add(SLOT_DURATION, "minutes");
 
-    // Convert to requested timezone and check if it matches the requested date
+    // Convert to the patient's timezone
     const slotLocal = currentTime.clone().tz(timezone);
+    const slotEndLocal = slotEnd.clone().tz(timezone);
+
+    // Ensure slots belong to the requested date in patient's timezone
     if (!slotLocal.isSame(moment.tz(requestedDate, timezone), "day")) {
-      break; // Stop adding slots once we reach the next day
+      break;
     }
 
     if (!isConflicting(currentTime, slotEnd, bookedSlots)) {
-      availableSlots.push(currentTime.format("YYYY-MM-DDTHH:mm:ss"));
+      availableSlots.push(slotLocal.format("YYYY-MM-DDTHH:mm:ss"));
     }
 
     currentTime.add(SLOT_DURATION, "minutes");

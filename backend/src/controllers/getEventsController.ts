@@ -4,6 +4,8 @@ import { logger } from "@utils/logger";
 import { GetEventsRequest, GetEventsResponse } from "@models/getEventsDataModel";
 import { invalidRequest } from "@utils/errorCodes";
 
+const DEFAULT_TIMEZONE = (process.env as any).DEFAULT_TIMEZONE || "US/Eastern";
+
 export const getEventsController = async (request: GetEventsRequest): Promise<GetEventsResponse> => {
     try {
         logger.info("getEventsController Request", { request });
@@ -15,13 +17,14 @@ export const getEventsController = async (request: GetEventsRequest): Promise<Ge
             throw new Error(JSON.stringify(invalidRequest));
         }
 
-        // Convert to UTC start and end timestamps
-        const startUTC = moment.utc(startDate, "YYYY-MM-DD").startOf("day"); // 00:00 UTC
-        const endUTC = moment.utc(endDate, "YYYY-MM-DD").endOf("day"); // 23:59:59.999 UTC
+        // Convert start and end date from DEFAULT_TIMEZONE to UTC
+        const startUTC = moment.tz(startDate, "YYYY-MM-DD", DEFAULT_TIMEZONE).startOf("day").utc();
+        const endUTC = moment.tz(endDate, "YYYY-MM-DD", DEFAULT_TIMEZONE).endOf("day").utc();
 
         logger.info("Fetching Events in UTC Range", {
             startUTC: startUTC.format(),
-            endUTC: endUTC.format()
+            endUTC: endUTC.format(),
+            requesterTimezone: DEFAULT_TIMEZONE
         });
 
         // Query Firestore for events within the given range
@@ -35,10 +38,10 @@ export const getEventsController = async (request: GetEventsRequest): Promise<Ge
 
             return {
                 id: doc.id,
-                event_start_time: moment(data.event_start_time.toDate()).utc().format("YYYY-MM-DD HH:mm:ss"),
-                event_end_time: moment(data.event_end_time.toDate()).utc().format("YYYY-MM-DD HH:mm:ss"),
+                event_start_time: moment(data.event_start_time.toDate()).tz(DEFAULT_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
+                event_end_time: moment(data.event_end_time.toDate()).tz(DEFAULT_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
                 duration: data.duration,
-                createdAt: moment(data.createdAt.toDate()).utc().format("YYYY-MM-DD HH:mm:ss"),
+                createdAt: moment(data.createdAt.toDate()).tz(DEFAULT_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
             };
         });
 
