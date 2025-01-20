@@ -25,7 +25,11 @@ export const availableSlotsHandler: RequestHandler = async (
           "Asia/Kolkata",
           "Europe/London",
           "US/Eastern",
-          "UTC"
+          "UTC",
+          "Australia/Sydney",
+          "Pacific/Auckland",
+          "Etc/UTC",
+          "Etc/GMT+12"
         ) // Add more valid timezones as needed
         .required()
     });

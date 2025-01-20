@@ -7,16 +7,15 @@ import { eventAlreadyExists, invalidRequest } from "@utils/errorCodes";
 const DR_TIMEZONE = (process.env as any).DR_TIMEZONE || "US/Eastern";
 const DR_START_HOUR = (process.env as any).DR_START_HOUR || 8;
 const DR_END_HOUR = (process.env as any).DR_END_HOUR || 17;
-const DEFAULT_TIMEZONE = (process.env as any).DEFAULT_TIMEZONE || "US/Eastern";
 
 export const createEventController = async (request: CreateEventRequest): Promise<CreateEventResponse> => {
     try {
         logger.info("createEventController Request", { request });
 
-        const { dateTime, duration } = request;
+        const { dateTime, duration, timezone } = request;
 
-        // Parse request datetime in DEFAULT_TIMEZONE
-        const eventStartLocal = moment.tz(dateTime, DEFAULT_TIMEZONE);
+        // Parse request datetime in pattient's timezone
+        const eventStartLocal = moment.tz(dateTime, timezone);
         // Convert to UTC for storage
         const eventStartUTC = eventStartLocal.clone().utc();
         const eventEndUTC = eventStartUTC.clone().add(duration, "minutes");

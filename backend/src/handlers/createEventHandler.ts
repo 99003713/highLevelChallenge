@@ -21,7 +21,20 @@ export const createEventHandler: RequestHandler = async (
             duration: Joi.number()
                 .integer()
                 .positive()
-                .required()
+                .required(),
+            timezone: Joi.string()
+                .valid(
+                    "America/Los_Angeles",
+                    "America/New_York",
+                    "Asia/Kolkata",
+                    "Europe/London",
+                    "US/Eastern",
+                    "UTC",
+                    "Australia/Sydney",
+                    "Pacific/Auckland",
+                    "Etc/UTC",
+                    "Etc/GMT+12"
+                ) // Add more valid timezones as needed    
         });
 
         // Validate request query parameters
