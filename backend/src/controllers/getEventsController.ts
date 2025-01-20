@@ -17,7 +17,7 @@ export const getEventsController = async (request: GetEventsRequest): Promise<Ge
 
         // Convert to UTC start and end timestamps
         const startUTC = moment.utc(startDate, "YYYY-MM-DD").startOf("day"); // 00:00 UTC
-        const endUTC = moment.utc(endDate, "YYYY-MM-DD").endOf("day"); // 23:59:59 UTC
+        const endUTC = moment.utc(endDate, "YYYY-MM-DD").endOf("day"); // 23:59:59.999 UTC
 
         logger.info("Fetching Events in UTC Range", {
             startUTC: startUTC.format(),
@@ -35,17 +35,16 @@ export const getEventsController = async (request: GetEventsRequest): Promise<Ge
 
             return {
                 id: doc.id,
-                event_start_time: moment.unix(data.event_start_time._seconds).utc().format("YYYY-MM-DD HH:mm:ss"),
-                event_end_time: moment.unix(data.event_end_time._seconds).utc().format("YYYY-MM-DD HH:mm:ss"),
+                event_start_time: moment(data.event_start_time.toDate()).utc().format("YYYY-MM-DD HH:mm:ss"),
+                event_end_time: moment(data.event_end_time.toDate()).utc().format("YYYY-MM-DD HH:mm:ss"),
                 duration: data.duration,
-                createdAt: moment.unix(data.createdAt._seconds).utc().format("YYYY-MM-DD HH:mm:ss"),
+                createdAt: moment(data.createdAt.toDate()).utc().format("YYYY-MM-DD HH:mm:ss"),
             };
         });
 
         logger.info("Fetched Events", { count: events.length });
 
-        //@ts-ignore
-        return { events: events };
+        return { events };
 
     } catch (error) {
         logger.error("Error in getEventsController", error);
