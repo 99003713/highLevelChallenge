@@ -4,7 +4,7 @@ import { logger } from "@utils/logger";
 import { GetEventsRequest, GetEventsResponse } from "@models/getEventsDataModel";
 import { invalidRequest } from "@utils/errorCodes";
 
-const DEFAULT_TIMEZONE = (process.env as any).DEFAULT_TIMEZONE || "US/Eastern";
+const DR_TIMEZONE = (process.env as any).DR_TIMEZONE || "US/Eastern";
 
 export const getEventsController = async (request: GetEventsRequest): Promise<GetEventsResponse> => {
     try {
@@ -17,14 +17,14 @@ export const getEventsController = async (request: GetEventsRequest): Promise<Ge
             throw new Error(JSON.stringify(invalidRequest));
         }
 
-        // Convert start and end date from DEFAULT_TIMEZONE to UTC
-        const startUTC = moment.tz(startDate, "YYYY-MM-DD", DEFAULT_TIMEZONE).startOf("day").utc();
-        const endUTC = moment.tz(endDate, "YYYY-MM-DD", DEFAULT_TIMEZONE).endOf("day").utc();
+        // Convert start and end date from DR_TIMEZONE to UTC
+        const startUTC = moment.tz(startDate, "YYYY-MM-DD", DR_TIMEZONE).startOf("day").utc();
+        const endUTC = moment.tz(endDate, "YYYY-MM-DD", DR_TIMEZONE).endOf("day").utc();
 
         logger.info("Fetching Events in UTC Range", {
             startUTC: startUTC.format(),
             endUTC: endUTC.format(),
-            requesterTimezone: DEFAULT_TIMEZONE
+            requesterTimezone: DR_TIMEZONE
         });
 
         // Query Firestore for events within the given range
@@ -38,10 +38,10 @@ export const getEventsController = async (request: GetEventsRequest): Promise<Ge
 
             return {
                 id: doc.id,
-                event_start_time: moment(data.event_start_time.toDate()).tz(DEFAULT_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
-                event_end_time: moment(data.event_end_time.toDate()).tz(DEFAULT_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
+                event_start_time: moment(data.event_start_time.toDate()).tz(DR_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
+                event_end_time: moment(data.event_end_time.toDate()).tz(DR_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
                 duration: data.duration,
-                createdAt: moment(data.createdAt.toDate()).tz(DEFAULT_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
+                createdAt: moment(data.createdAt.toDate()).tz(DR_TIMEZONE).format("YYYY-MM-DD HH:mm:ss"),
             };
         });
 
