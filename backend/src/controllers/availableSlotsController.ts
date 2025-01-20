@@ -86,8 +86,8 @@ export const availableSlotsController = async (request: AvailableSlotsRequest): 
     // Query Firestore for booked slots within this range
     const bookedSlotsSnap = await db
       .collection("events")
-      .where("date", ">=", doctorStartUTC.toDate())
-      .where("date", "<=", doctorEndUTC.toDate())
+      .where("event_start_time", "<=", doctorStartUTC.toDate())
+      .where("event_end_time", ">=", doctorEndUTC.toDate())
       .get();
 
     // Extract booked slots including variable durations

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import * as error from "@middlewares/error";
 import { availableSlotsHandler } from "@handlers/availableSlotsHandler";
 import { createEventHandler } from "@handlers/createEventHandler";
-// import { getEvents } from "@controllers/getEventsController";
+import { getEventsHandler } from "@handlers/getEventsHandler";
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ app.use(BASE_PATH, router);
 
 router.get("/available_slots", availableSlotsHandler);
 router.post("/create_event", createEventHandler);
-// router.get("/events", getEvents);
+router.get("/events", getEventsHandler);
 
 // Catch All Error Handler
 router.use(error.handler);
