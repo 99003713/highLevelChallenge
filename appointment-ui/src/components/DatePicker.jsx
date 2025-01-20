@@ -1,17 +1,16 @@
 import React from 'react';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TextField } from '@mui/material';
 
-const DatePicker = ({ value, onChange }) => {
+const CustomDatePicker = ({ label, value, onChange }) => {
   return (
-    <TextField
-      label="Select Date"
-      type="date"
+    <DatePicker
+      label={label}
       value={value}
       onChange={onChange}
-      InputLabelProps={{ shrink: true }}
-      fullWidth
+      renderInput={(params) => <TextField {...params} fullWidth margin="normal" />}
     />
   );
 };
 
-export default DatePicker;
+export default CustomDatePicker;

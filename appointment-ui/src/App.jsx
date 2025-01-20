@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Container, AppBar, Toolbar, Button } from "@mui/material";
+import { AppBar, Toolbar, Button, Container, Typography } from "@mui/material";
 import BookEvent from "./pages/BookEvent";
 import ShowEvents from "./pages/ShowEvents";
 
-function App() {
+function Layout({ children }) {
   return (
-    <Router>
+    <>
       <AppBar position="static">
         <Toolbar>
           <Button color="inherit" component={Link} to="/">
@@ -17,13 +17,42 @@ function App() {
           </Button>
         </Toolbar>
       </AppBar>
+      <Container>{children}</Container>
+    </>
+  );
+}
 
-      <Container>
-        <Routes>
-          <Route path="/" element={<BookEvent />} />
-          <Route path="/events" element={<ShowEvents />} />
-        </Routes>
-      </Container>
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <BookEvent />
+            </Layout>
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <Layout>
+              <ShowEvents />
+            </Layout>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Layout>
+              <Typography variant="h5" textAlign="center" mt={3}>
+                Page Not Found
+              </Typography>
+            </Layout>
+          }
+        />
+      </Routes>
     </Router>
   );
 }

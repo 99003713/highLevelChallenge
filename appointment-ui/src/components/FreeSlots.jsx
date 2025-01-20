@@ -1,15 +1,26 @@
-import React from 'react';
-import { Button, Stack } from '@mui/material';
+import React from "react";
+import { Button, Grid, Box } from "@mui/material";
 
 const FreeSlots = ({ slots, onSelect }) => {
   return (
-    <Stack direction="row" spacing={2} flexWrap="wrap">
-      {slots.map((slot) => (
-        <Button key={slot} variant="contained" onClick={() => onSelect(slot)}>
-          {new Date(slot).toLocaleTimeString()}
-        </Button>
-      ))}
-    </Stack>
+    <Box mt={2}>
+      <Grid container spacing={2}>
+        {slots.map((slot) => (
+          <Grid item xs={6} sm={4} md={3} key={slot}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => onSelect(slot)}
+            >
+              {new Date(slot).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 };
 

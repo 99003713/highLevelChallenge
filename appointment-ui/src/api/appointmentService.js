@@ -1,34 +1,29 @@
-const API_BASE_URL = 'http://localhost:3000/appointment';
+import axios from "axios";
 
-export const getAvailableSlots = async (date, timezone) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/available_slots?date=${date}&timezone=${timezone}`);
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching available slots:', error);
-    return [];
-  }
+const API_BASE_URL = "http://localhost:3000/appointment";
+
+export const fetchAvailableSlots = async (date, timezone) => {
+  console.log("fetchAvailableSlots", date, timezone);
+  const response = await axios.get(`${API_BASE_URL}/available_slots`, {
+    params: { date, timezone },
+  });
+  console.log("fetchAvailableSlots response", response.data);
+  return response.data;
 };
 
-export const createEvent = async ({ dateTime, duration }) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/create_event`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dateTime, duration })
-    });
-    return response.json();
-  } catch (error) {
-    console.error('Error creating event:', error);
-  }
+export const createEvent = async (dateTime, duration, timezone) => {
+  const response = await axios.post(`${API_BASE_URL}/create_event`, {
+    dateTime,
+    duration,
+    timezone,
+  });
+  return response.data;
 };
 
-export const getEvents = async (startDate, endDate) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/events?startDate=${startDate}&endDate=${endDate}`);
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    return [];
-  }
+export const fetchBookedEvents = async (startDate, endDate) => {
+  console.log("fetchBookedEvents");
+  const response = await axios.get(`${API_BASE_URL}/events`, {
+    params: { startDate, endDate },
+  });
+  return response.data.events;
 };

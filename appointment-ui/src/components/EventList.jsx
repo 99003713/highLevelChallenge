@@ -10,7 +10,7 @@ const EventList = ({ events }) => {
         events.map((event, index) => (
           <ListItem key={index}>
             <ListItemText
-              primary={`Event at: ${new Date(event.dateTime).toLocaleString()}`}
+              primary={`Event at: ${new Date(event.event_start_time).toLocaleString()}`}
               secondary={`Duration: ${event.duration} mins`}
             />
           </ListItem>
