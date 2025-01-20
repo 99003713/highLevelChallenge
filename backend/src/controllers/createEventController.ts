@@ -4,7 +4,6 @@ import { logger } from "@utils/logger";
 import { CreateEventRequest, CreateEventResponse } from "@models/createEventDataModel";
 import { eventAlreadyExists, invalidRequest } from "@utils/errorCodes";
 
-const DR_DURATION = (process.env as any).DR_DURATION || 30;
 const DR_TIMEZONE = (process.env as any).DR_TIMEZONE || "US/Eastern";
 const DR_START_HOUR = (process.env as any).DR_START_HOUR || 8;
 const DR_END_HOUR = (process.env as any).DR_END_HOUR || 17;

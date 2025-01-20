@@ -34,7 +34,6 @@ const generateAvailableSlots = (
 
     // Convert to the patient's timezone
     const slotLocal = currentTime.clone().tz(timezone);
-    const slotEndLocal = slotEnd.clone().tz(timezone);
 
     // Ensure slots belong to the requested date in patient's timezone
     if (!slotLocal.isSame(moment.tz(requestedDate, timezone), "day")) {
