@@ -1,6 +1,11 @@
 Appointment Booking System
 
 ********* Verify Apis ***************
+
+
+NOTE: Since this repository is publicly available, the Firebase key is not included in the serviceAccount.json file.
+Please generate a new key, add it to this file, and then create the events collection in Firestore.
+
 go to backend folder
 
 1.Install dependencies:
