@@ -16,7 +16,7 @@ Endpoint: GET /appointment/available_slots
 Description: Retrieves available time slots for appointments on a given date and timezone.
 
 Request Example:
-curl --location 'http://localhost:3000/appointment/available_slots?date=2025-01-25&timezone=US%2FEastern'
+curl --location 'http://localhost:3000/appointment/available_slots?date=2025-01-25&timezone=Asia%2FKolkata'
 
 
 
@@ -28,7 +28,7 @@ Request Example:
 curl --location 'http://localhost:3000/appointment/create_event' \
 --header 'Content-Type: application/json' \
 --data '{
-    "dateTime": "2025-01-23T08:00:00",
+    "dateTime": "2025-01-25T08:00:00",
     "duration": 30,
     "timezone": "Asia/Kolkata"
 }'
