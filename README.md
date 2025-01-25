@@ -1,4 +1,5 @@
 Appointment Booking System
+
 Prerequisites:
 Since this repository is publicly available, the Firebase key is not included in the serviceAccount.json file.
 Action Required: Generate a new Firebase service account key, add it to the serviceAccount.json file, and create the events collection in Firestore before proceeding.
