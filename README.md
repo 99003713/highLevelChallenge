@@ -1,72 +1,72 @@
 Appointment Booking System
+Prerequisites:
+Since this repository is publicly available, the Firebase key is not included in the serviceAccount.json file.
+Action Required: Generate a new Firebase service account key, add it to the serviceAccount.json file, and create the events collection in Firestore before proceeding.
 
-********* Verify Apis ***************
 
+Backend Setup and API Verification
+Steps to Set Up Backend and Verify APIs:
 
-NOTE: Since this repository is publicly available, the Firebase key is not included in the serviceAccount.json file.
-Please generate a new key, add it to this file, and then create the events collection in Firestore.
+# Step 1: Navigate to the backend folder
+cd backend
 
-go to backend folder
-
-1.Install dependencies:
+# Step 2: Install dependencies
 npm install
 
-2.Start the server:
+# Step 3: Start the server
 npm run start
 
-
-API Endpoints
+API Endpoints:
 1. Get Available Slots
 Endpoint: GET /appointment/available_slots
 Description: Retrieves available time slots for appointments on a given date and timezone.
-
 Request Example:
 curl --location 'http://localhost:3000/appointment/available_slots?date=2025-01-25&timezone=Asia%2FKolkata'
-
 
 
 2. Create an Event
 Endpoint: POST /appointment/create_event
 Description: Books an appointment for a specific date and time.
-
+Note: The timezone parameter is required but not mentioned in the original documentation.
 Request Example:
 curl --location 'http://localhost:3000/appointment/create_event' \
 --header 'Content-Type: application/json' \
 --data '{
-    "dateTime": "2025-01-25T08:00:00",
-    "duration": 30,
-    "timezone": "Asia/Kolkata"
+  "dateTime": "2025-01-25T08:00:00",
+  "duration": 30,
+  "timezone": "Asia/Kolkata"
 }'
-
-NOTE: timezone was not mentioned in the provided doc but it is required while creating en event.
 
 
 3. Get Booked Events
 Endpoint: GET /appointment/events
-Description: Retrieves all booked appointments within a given date range.
-
+Description: Retrieves all booked appointments within a specified date range.
 Request Example:
 curl --location 'http://localhost:3000/appointment/events?startDate=2025-01-25&endDate=2025-01-25'
 
 
+Frontend Setup and UI Verification
+Steps to Set Up and Test UI:
+# Step 1: Navigate to the backend folder (if not already running)
+cd backend
 
-********* Verify UI + Apis ***************
-
-1 go to backend folder
-
-1.1 Install dependencies:
+# Step 2: Install dependencies (if not done already)
 npm install
 
-1.2 Start the server:
+# Step 3: Start the backend server
 npm run start
 
-2 go to appointment-ui folder
+# Step 4: Navigate to the appointment-ui folder
+cd ../appointment-ui
 
-2.1 Install dependencies:
+# Step 5: Install dependencies
 npm install
 
-2.2 Start the server:
+# Step 6: Start the frontend server
 npm run dev
 
 
-now open http://localhost:5173/ to test the UI
+Access the UI:
+Open http://localhost:5173/ in your browser to test the appointment booking UI.
+
+
